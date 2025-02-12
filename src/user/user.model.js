@@ -40,6 +40,7 @@ const userSchema = Schema(
     role: {
       type: String,
       enum: ["ADMIN", "CUSTOMER"],
+
       required: true,
     },
     status: {
@@ -54,8 +55,8 @@ const userSchema = Schema(
 )
 
 userSchema.methods.toJSON = function () {
-  const { password, _id, ...usuario } = this.toObject()
-  usuario.uid = _id
+  const { password, _id, ...user } = this.toObject()
+  user.uid = _id
   return usuario
 }
 
