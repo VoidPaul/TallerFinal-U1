@@ -21,7 +21,7 @@ const routes = (app) => {
   app.use("/shop-manager/v1/auth", authRoutes)
 }
 
-const conectarDB = async () => {
+const connectDB = async () => {
   try {
     await dbConnection()
   } catch (err) {
@@ -34,11 +34,11 @@ export const initServer = () => {
   const app = express()
   try {
     middlewares(app)
-    conectarDB()
+    connectDB()
     routes(app)
     app.listen(process.env.PORT)
-    console.log(`Server | Running on port ${process.env.PORT}`)
+    console.log(`Server  | Running on port ${process.env.PORT}`)
   } catch (err) {
-    console.log(`Server | Init failed: ${err}`)
+    console.log(`Server  | Init failed: ${err}`)
   }
 }
