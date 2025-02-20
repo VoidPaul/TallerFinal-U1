@@ -11,7 +11,7 @@ export const userExists = async (uid = "") => {
 export const usernameExists = async (username = "") => {
   const exists = await User.findOne({ username })
 
-  if (!exists) {
+  if (exists) {
     throw new Error(`Username already in use.`)
   }
 }
@@ -19,7 +19,7 @@ export const usernameExists = async (username = "") => {
 export const emailExists = async (email = "") => {
   const exists = await User.findOne({ email })
 
-  if (!exists) {
+  if (exists) {
     throw new Error(`E-mail already in use.`)
   }
 }

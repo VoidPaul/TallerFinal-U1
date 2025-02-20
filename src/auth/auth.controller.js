@@ -53,6 +53,7 @@ export const login = async (req, res) => {
       },
     })
   } catch (err) {
+    console.log(`Debugger | Request has aquired this data ${req.body}`)
     return res.status(500).json({
       message: "User login failed.",
       error: err.message,

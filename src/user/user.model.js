@@ -15,7 +15,6 @@ const userSchema = Schema(
     username: {
       type: String,
       unique: true,
-      minLength: 5,
       maxLength: 25,
       required: [true, "Username required."],
     },

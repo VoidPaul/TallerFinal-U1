@@ -25,7 +25,7 @@ const connectDB = async () => {
   try {
     await dbConnection()
   } catch (err) {
-    console.log(`Server | Database connection failed: ${err}`)
+    console.log(`Server  | Database connection failed: ${err}`)
     process.exit(1)
   }
 }
