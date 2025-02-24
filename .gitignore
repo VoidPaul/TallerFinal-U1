@@ -1,4 +1,9 @@
+# VScode custom configs
 .vscode/
+
+# Profile pictures except the default
+public/**
+!public/uploads/pictures/default-pfp.png
 
 # Logs
 logs

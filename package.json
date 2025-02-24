@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VoidPaul/TallerIII-U1.git"
+    "url": "git+https://github.com/VoidPaul/TallerFinal-U1.git"
   },
   "author": "Paulo Giovanni Alvarez Ramos - 2023238",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/VoidPaul/TallerIII-U1/issues"
+    "url": "https://github.com/VoidPaul/TallerFinal-U1/issues"
   },
-  "homepage": "https://github.com/VoidPaul/TallerIII-U1#readme",
+  "homepage": "https://github.com/VoidPaul/TallerFinal-U1#readme",
   "devDependencies": {
     "nodemon": "^3.1.9"
   },
