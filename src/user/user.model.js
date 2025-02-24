@@ -15,6 +15,7 @@ const userSchema = Schema(
     username: {
       type: String,
       unique: true,
+      minLength: 5,
       maxLength: 25,
       required: [true, "Username required."],
     },
@@ -34,12 +35,11 @@ const userSchema = Schema(
     },
     profilePicture: {
       type: String,
-      //default: "",
+      default: "default-pfp.png",
     },
     role: {
       type: String,
-      enum: ["ADMIN", "CUSTOMER"],
-
+      enum: ["ADMIN", "USER"],
       required: true,
     },
     status: {
@@ -56,7 +56,7 @@ const userSchema = Schema(
 userSchema.methods.toJSON = function () {
   const { password, _id, ...user } = this.toObject()
   user.uid = _id
-  return usuario
+  return user
 }
 
 export default model("User", userSchema)
