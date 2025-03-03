@@ -12,35 +12,11 @@ Este proyecto utiliza el puerto `3000` para operar (es libre de cambiarlo si lo 
 
 ## Funciones de la API:[^1]
 
-Para enviar correctamente solicitudes a esta API, hay que enviar los datos con el método correcto, en el enlace correcto, y los datos correctos.[^2] A continuación se especifican el método HTTP, y algunos detalles sobre la información que se espera.
-
-### Autenticación
-
-
-
-### Usuarios
-
-
-
-### Productos
-
-
-
-#### Categorías
-
-
-
-### Compras
-
-
-
-#### Facturas
-
-
+Para enviar correctamente solicitudes a esta API, hay que enviar los datos con el método correcto, en el enlace correcto, y los datos correctos.[^2]
 
 ---
 
 ###### Notas:
 
-[^1]: No todas los módulos tienen código y/o funcionalidad. Solo que trabajo mejor cuando tengo los cimientos ya creados.
+[^1]: No todas los módulos tienen código y/o funcionalidad.
 [^2]: Para el resto de información, verifique la documentación en Swagger.

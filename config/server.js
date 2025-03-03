@@ -6,7 +6,9 @@ import helmet from "helmet"
 import morgan from "morgan"
 import { dbConnection } from "./database.js"
 import authRoutes from "../src/auth/auth.routes.js"
+import userRoutes from "../src/user/user.routes.js"
 import apiLimiter from "../src/middleware/rate-limit.js"
+import { swaggerDocs, swaggerUi } from "./swagger.js"
 
 const middlewares = (app) => {
   app.use(express.urlencoded({ extended: false }))
@@ -19,6 +21,8 @@ const middlewares = (app) => {
 
 const routes = (app) => {
   app.use("/shop-manager/v1/auth", authRoutes)
+  app.use("/shop-manager/v1/user", userRoutes)
+  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 }
 
 const connectDB = async () => {
