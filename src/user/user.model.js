@@ -39,7 +39,7 @@ const userSchema = Schema(
     },
     role: {
       type: String,
-      enum: ["ADMIN", "USER"],
+      enum: ["ADMIN", "CUSTOMER"],
       required: true,
     },
     status: {
@@ -49,7 +49,7 @@ const userSchema = Schema(
   },
   {
     versionKey: false,
-    timeStamps: true,
+    timestamps: true,
   }
 )
 

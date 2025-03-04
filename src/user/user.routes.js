@@ -21,11 +21,8 @@ import { uploadProfilePicture } from "../middleware/multer-uploads.js"
 
 const router = Router()
 
-<<<<<<< HEAD
-=======
 // General Routes
 
->>>>>>> feature/auth
 /**
  * @swagger
  * /shop-manager/v1/user/profile/{uid}:
@@ -327,10 +324,10 @@ router.patch(
 
 // Admin-only routes
 
-router.put("/admin/user/update/:uid", adminUpdateUserValidator, adminUpdateUser)
+router.put("/update/:uid/admin", adminUpdateUserValidator, adminUpdateUser)
 
-router.patch("/admin/user/update/password/:uid", adminUpdatePasswordValidator, adminUpdatePassword)
+router.patch("/update/password/:uid/admin", adminUpdatePasswordValidator, adminUpdatePassword)
 
-router.patch("/admin/user/update/picture/:uid", adminUpdateProfilePictureValidator, adminUpdateProfilePicture)
+router.patch("/update/picture/:uid/admin", adminUpdateProfilePictureValidator, adminUpdateProfilePicture)
 
 export default router

@@ -1,5 +1,5 @@
 import { body, param } from "express-validator"
-import { userExists, usernameExists, emailExists } from "../helpers/database-validator.js"
+import { userExists, usernameExists, emailExists } from "../helpers/validate-database.js"
 import { validateJWT, validateRoles } from "./validate-jwt.js"
 import { validateFields } from "./field-error-handler.js"
 import { deleteFileOnError } from "./file-error-handler.js"
