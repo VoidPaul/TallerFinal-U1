@@ -6,10 +6,114 @@ import { fileURLToPath } from "url"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+// Update logic
+
+const updateUserData = async (uid, data, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(uid, data, { new: true })
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated.",
+      user,
+    })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Error updating user.",
+      error: err.message,
+    })
+  }
+}
+
+const updateUserPassword = async (uid, newPassword, res) => {
+  try {
+    const user = await User.findById(uid)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      })
+    }
+
+    const samePassword = await verify(user.password, newPassword)
+
+    if (samePassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New password cannot be the same as previous one.",
+      })
+    }
+
+    const encryptedPassword = await hash(newPassword)
+    await User.findByIdAndUpdate(uid, { password: encryptedPassword }, { new: true })
+
+    return res.status(200).json({
+      success: true,
+      message: "Password updated.",
+    })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Error changing password.",
+      error: err.message,
+    })
+  }
+}
+
+const updateUserProfilePicture = async (uid, req, res) => {
+  try {
+    let newProfilePic = req.file ? req.file.filename : "default-pfp.png"
+
+    if (!newProfilePic) {
+      return res.status(400).json({
+        success: false,
+        message: "File not found.",
+      })
+    }
+
+    const user = await User.findById(uid)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      })
+    }
+
+    if (user.profilePicture && user.profilePicture !== "default-pfp.png") {
+      const oldProfilePic = join(__dirname, "../../public/uploads/pictures/profile", user.profilePicture)
+      await fs.unlink(oldProfilePic) // Added await to handle async deletion
+    }
+
+    user.profilePicture = newProfilePic
+    await user.save()
+
+    return res.status(200).json({
+      success: true,
+      message: "Picture updated.",
+      profilePicture: user.profilePicture,
+    })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Error updating profile picture.",
+      error: err.message,
+    })
+  }
+}
+
 export const getUserById = async (req, res) => {
   try {
     const { uid } = req.params
-
     const user = await User.findById(uid)
 
     if (!user) {
@@ -32,95 +136,28 @@ export const getUserById = async (req, res) => {
   }
 }
 
+// Function calling with different parameters for normal users and admins
+
 export const updateUser = async (req, res) => {
-  try {
-    const uid = req.user._id
-    const data = req.body
-
-    const user = await User.findByIdAndUpdate(uid, data, { new: true })
-
-    return res.status(200).json({
-      success: true,
-      message: "User updated.",
-      user,
-    })
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Error updating user.",
-      error: err.message,
-    })
-  }
+  await updateUserData(req.user._id, req.body, res)
 }
 
 export const updatePassword = async (req, res) => {
-  try {
-    const uid = req.user._id
-    const { newPassword } = req.body
-
-    const user = await User.findById(uid)
-
-    const samePassword = await verify(user.password, newPassword)
-
-    if (samePassword) {
-      return res.status(400).json({
-        success: false,
-        message: "New password cannot be the same as previous one.",
-      })
-    }
-
-    const encryptedPassword = await hash(newPassword)
-
-    await User.findByIdAndUpdate(uid, { password: encryptedPassword }, { new: true })
-
-    return res.status(200).json({
-      success: true,
-      message: "Password updated.",
-    })
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Error changing password.",
-      error: err.message,
-    })
-  }
+  await updateUserPassword(req.user._id, req.body.newPassword, res)
 }
 
 export const updateProfilePicture = async (req, res) => {
-  try {
-    const uid = req.user._id
+  await updateUserProfilePicture(req.user._id, req, res)
+}
 
-    let newProfilePic = req.file ? req.file.filename : "default-pfp.png"
+export const adminUpdateUser = async (req, res) => {
+  await updateUserData(req.params.uid, req.body, res)
+}
 
-    if (!newProfilePic) {
-      return res.status(400).json({
-        success: false,
-        message: "File not found.",
-      })
-    }
+export const adminUpdatePassword = async (req, res) => {
+  await updateUserPassword(req.params.uid, req.body.newPassword, res)
+}
 
-    const user = await User.findById(uid)
-
-    if (user.profilePicture && user.profilePicture !== "default-pfp.png") {
-      const oldProfilePic = join(__dirname, "../../public/uploads/pictures/profile", user.profilePicture)
-
-      fs.unlink(oldProfilePic)
-    }
-
-    user.profilePicture = newProfilePic
-
-    await user.save()
-
-    return res.status(200).json({
-      success: true,
-      message: "Picture updated.",
-      profilePicture: user.profilePicture,
-    })
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Error updating profile picture.",
-      error: err.message,
-    })
-  }
+export const adminUpdateProfilePicture = async (req, res) => {
+  await updateUserProfilePicture(req.params.uid, req, res)
 }
