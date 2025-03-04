@@ -91,7 +91,7 @@ const updateUserProfilePicture = async (uid, req, res) => {
 
     if (user.profilePicture && user.profilePicture !== "default-pfp.png") {
       const oldProfilePic = join(__dirname, "../../public/uploads/pictures/profile", user.profilePicture)
-      await fs.unlink(oldProfilePic) // Added await to handle async deletion
+      await fs.unlink(oldProfilePic)
     }
 
     user.profilePicture = newProfilePic
