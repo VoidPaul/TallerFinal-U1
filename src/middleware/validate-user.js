@@ -1,9 +1,11 @@
 import { body, param } from "express-validator"
 import { userExists, usernameExists, emailExists } from "../helpers/database-validator.js"
-import { validateJWT } from "./validate-jwt.js"
+import { validateJWT, validateRoles } from "./validate-jwt.js"
 import { validateFields } from "./field-error-handler.js"
 import { deleteFileOnError } from "./file-error-handler.js"
 import { handleErrors } from "./error-handler.js"
+
+// General Authentication
 
 export const registerValidator = [
   body("name", "Name required.").notEmpty(),
@@ -25,6 +27,8 @@ export const loginValidator = [
   validateFields,
   handleErrors,
 ]
+
+// General Validations
 
 export const getUserByIdValidator = [
   param("uid", "Invalid MongoDB ID.").isMongoId(),
@@ -48,3 +52,29 @@ export const updatePasswordValidator = [
 ]
 
 export const updateProfilePictureValidator = [validateJWT, validateFields, deleteFileOnError, handleErrors]
+
+// Admin-only Validations
+
+export const adminUpdateUserValidator = [
+  validateJWT,
+  validateRoles("ADMIN"),
+  body("username", "Username already in use.").custom(usernameExists),
+  validateFields,
+  handleErrors,
+]
+
+export const adminUpdatePasswordValidator = [
+  validateJWT,
+  validateRoles("ADMIN"),
+  body("newPassword", "New password cannot be W E A K.").isStrongPassword(),
+  validateFields,
+  handleErrors,
+]
+
+export const adminUpdateProfilePictureValidator = [
+  validateJWT,
+  validateRoles("ADMIN"),
+  validateFields,
+  deleteFileOnError,
+  handleErrors,
+]

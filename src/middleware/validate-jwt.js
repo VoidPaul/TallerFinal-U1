@@ -42,3 +42,23 @@ export const validateJWT = async (req, res, next) => {
     })
   }
 }
+
+export const validateRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      res.status(400).json({
+        success: false,
+        message: "Tried to verify role before token",
+      })
+    }
+
+    if (!roles.includes(req.user.role)) {
+      return res.status(401).json({
+        success: false,
+        message: `Unauthorized operation. Only ${roles} have access to this function.`,
+      })
+    }
+
+    next()
+  }
+}

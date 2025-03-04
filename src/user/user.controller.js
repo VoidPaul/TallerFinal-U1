@@ -124,3 +124,96 @@ export const updateProfilePicture = async (req, res) => {
     })
   }
 }
+
+export const adminUpdateUser = async (req, res) => {
+  try {
+    const { uid } = req.params
+    const data = req.body
+
+    const user = await User.findByIdAndUpdate(uid, data, { new: true })
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated.",
+      user,
+    })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Error updating user.",
+      error: err.message,
+    })
+  }
+}
+
+export const adminUpdatePassword = async (req, res) => {
+  try {
+    const { uid } = req.params
+    const { newPassword } = req.body
+
+    const user = await User.findById(uid)
+
+    const samePassword = await verify(user.password, newPassword)
+
+    if (samePassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New password cannot be the same as previous one.",
+      })
+    }
+
+    const encryptedPassword = await hash(newPassword)
+
+    await User.findByIdAndUpdate(uid, { password: encryptedPassword }, { new: true })
+
+    return res.status(200).json({
+      success: true,
+      message: "Password updated.",
+    })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Error changing password.",
+      error: err.message,
+    })
+  }
+}
+
+export const adminUpdateProfilePicture = async (req, res) => {
+  try {
+    const { uid } = req.params
+
+    let newProfilePic = req.file ? req.file.filename : "default-pfp.png"
+
+    if (!newProfilePic) {
+      return res.status(400).json({
+        success: false,
+        message: "File not found.",
+      })
+    }
+
+    const user = await User.findById(uid)
+
+    if (user.profilePicture && user.profilePicture !== "default-pfp.png") {
+      const oldProfilePic = join(__dirname, "../../public/uploads/pictures/profile", user.profilePicture)
+
+      fs.unlink(oldProfilePic)
+    }
+
+    user.profilePicture = newProfilePic
+
+    await user.save()
+
+    return res.status(200).json({
+      success: true,
+      message: "Picture updated.",
+      profilePicture: user.profilePicture,
+    })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Error updating profile picture.",
+      error: err.message,
+    })
+  }
+}
