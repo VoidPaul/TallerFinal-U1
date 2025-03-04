@@ -12,7 +12,7 @@ Este proyecto utiliza el puerto `3000` para operar (es libre de cambiarlo si lo 
 
 ## Funciones de la API:[^1]
 
-Para enviar correctamente solicitudes a esta API, hay que enviar los datos con el método correcto, en el enlace correcto, y los datos correctos.[^2]
+Para enviar correctamente solicitudes a esta API, hay que enviar los datos con el método correcto, en el enlace correcto, y los datos correctos.[^2] Para obtener información detallada dentro de la API, visite la documentación de Swagger en: `http://localhost:3000/api/docs`.
 
 ---
 
