@@ -2,8 +2,10 @@
 .vscode/
 
 # Profile pictures except the default
-public/**
-!public/uploads/pictures/default-pfp.png
+public/uploads/pictures/profile/*
+public/uploads/pictures/product/*
+!public/uploads/pictures/product/example-product.jpg
+!public/uploads/pictures/profile/default-pfp.png
 
 # Logs
 logs
