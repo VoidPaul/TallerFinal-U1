@@ -1,14 +1,27 @@
 import { Router } from "express"
-import { getUserById, updateUser, updatePassword, updateProfilePicture } from "./user.controller.js"
+import {
+  getUserById,
+  updateUser,
+  updatePassword,
+  updateProfilePicture,
+  adminUpdateUser,
+  adminUpdatePassword,
+  adminUpdateProfilePicture,
+} from "./user.controller.js"
 import {
   getUserByIdValidator,
   updateUserValidator,
   updatePasswordValidator,
   updateProfilePictureValidator,
+  adminUpdateUserValidator,
+  adminUpdatePasswordValidator,
+  adminUpdateProfilePictureValidator,
 } from "../middleware/validate-user.js"
 import { uploadProfilePicture } from "../middleware/multer-uploads.js"
 
 const router = Router()
+
+// General Routes
 
 /**
  * @swagger
@@ -308,5 +321,13 @@ router.patch(
   updateProfilePictureValidator,
   updateProfilePicture
 )
+
+// Admin-only routes
+
+router.put("/admin/user/update/:uid", adminUpdateUserValidator, adminUpdateUser)
+
+router.patch("/admin/user/update/password/:uid", adminUpdatePasswordValidator, adminUpdatePassword)
+
+router.patch("/admin/user/update/picture/:uid", adminUpdateProfilePictureValidator, adminUpdateProfilePicture)
 
 export default router
