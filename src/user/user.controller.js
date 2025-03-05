@@ -8,9 +8,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // Update logic
 
-const updateUserData = async (uid, data, res) => {
+const updateUserData = async (uid, data, req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(uid, data, { new: true })
+    const user = await User.findById(uid)
 
     if (!user) {
       return res.status(404).json({
@@ -19,10 +19,21 @@ const updateUserData = async (uid, data, res) => {
       })
     }
 
+    const requesterId = req.user ? req.user._id : null
+
+    if (user.role === "ADMIN" && requesterId && uid.toString() !== requesterId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Admins cannot edit other admins.",
+      })
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(uid, data, { new: true })
+
     return res.status(200).json({
       success: true,
       message: "User updated.",
-      user,
+      updatedUser,
     })
   } catch (err) {
     return res.status(500).json({
@@ -33,7 +44,7 @@ const updateUserData = async (uid, data, res) => {
   }
 }
 
-const updateUserPassword = async (uid, newPassword, res) => {
+const updateUserPassword = async (uid, newPassword, req, res) => {
   try {
     const user = await User.findById(uid)
 
@@ -41,6 +52,15 @@ const updateUserPassword = async (uid, newPassword, res) => {
       return res.status(404).json({
         success: false,
         message: "User not found.",
+      })
+    }
+
+    const requesterId = req.user ? req.user._id : null
+
+    if (user.role === "ADMIN" && requesterId && uid.toString() !== requesterId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Admins cannot edit other admins' passwords.",
       })
     }
 
@@ -54,6 +74,7 @@ const updateUserPassword = async (uid, newPassword, res) => {
     }
 
     const encryptedPassword = await hash(newPassword)
+
     await User.findByIdAndUpdate(uid, { password: encryptedPassword }, { new: true })
 
     return res.status(200).json({
@@ -89,12 +110,26 @@ const updateUserProfilePicture = async (uid, req, res) => {
       })
     }
 
+    const requesterId = req.user ? req.user._id : null
+
+    if (user.role === "ADMIN" && requesterId && uid.toString() !== requesterId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Admins cannot edit other admins' profile pictures.",
+      })
+    }
+
     if (user.profilePicture && user.profilePicture !== "default-pfp.png") {
-      const oldProfilePic = join(__dirname, "../../public/uploads/pictures/profile", user.profilePicture)
+      const oldProfilePic = join(
+        __dirname,
+        "../../public/uploads/pictures/profile",
+        user.profilePicture
+      )
       await fs.unlink(oldProfilePic)
     }
 
     user.profilePicture = newProfilePic
+
     await user.save()
 
     return res.status(200).json({
@@ -113,17 +148,35 @@ const updateUserProfilePicture = async (uid, req, res) => {
 
 const disableUserStatus = async (uid, req, res) => {
   try {
+    const user = await User.findById(uid)
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      })
+    }
+
+    const requesterId = req.user ? req.user._id : null
+
+    if (user.role === "ADMIN" && requesterId && uid.toString() !== requesterId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Admins cannot delete other admins.",
+      })
+    }
+
     await User.findByIdAndUpdate(uid, { status: false })
 
     return res.status(200).json({
       success: true,
-      message: "User removed successfuly.",
+      message: "User removed successfully.",
     })
   } catch (err) {
     return res.status(500).json({
       success: false,
       message: "Error removing user.",
-      error: err,
+      error: err.message,
     })
   }
 }
@@ -153,14 +206,14 @@ export const getUserById = async (req, res) => {
   }
 }
 
-// Function calling with different parameters for normal users and admins
+// Function calling
 
 export const updateUser = async (req, res) => {
-  await updateUserData(req.user._id, req.body, res)
+  await updateUserData(req.user._id, req.body, req, res)
 }
 
 export const updatePassword = async (req, res) => {
-  await updateUserPassword(req.user._id, req.body.newPassword, res)
+  await updateUserPassword(req.user._id, req.body.newPassword, req, res)
 }
 
 export const updateProfilePicture = async (req, res) => {
@@ -172,11 +225,11 @@ export const removeUser = async (req, res) => {
 }
 
 export const adminUpdateUser = async (req, res) => {
-  await updateUserData(req.params.uid, req.body, res)
+  await updateUserData(req.params.uid, req.body, req, res)
 }
 
 export const adminUpdatePassword = async (req, res) => {
-  await updateUserPassword(req.params.uid, req.body.newPassword, res)
+  await updateUserPassword(req.params.uid, req.body.newPassword, req, res)
 }
 
 export const adminUpdateProfilePicture = async (req, res) => {
