@@ -1,0 +1,491 @@
+{
+	"info": {
+		"_postman_id": "87172724-08a5-4ae9-a7a8-c9947959aea3",
+		"name": "U1 - Taller Final - Shop Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "37585419"
+	},
+	"item": [
+		{
+			"name": "admin-only",
+			"item": [
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "admin-update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// Commente la línea(s) de los datos que no quire cambiar.\r\n// Asegúrese de colocar su token en Authorization > Bearer.\r\n\r\n{\r\n    \"name\": \"\"\r\n    ,\"lastName\": \"\"\r\n    ,\"username\": \"\"\r\n    ,\"email\": \"\"\r\n    ,\"phone\": \"\"\r\n    ,\"role\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/shop-manager/v1/user/update/<uid>/admin"
+							},
+							"response": []
+						},
+						{
+							"name": "admin-change-pfp",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "profilePicture",
+											"value": "",
+											"type": "file"
+										}
+									]
+								},
+								"url": "http://localhost:3000/shop-manager/v1/user/update/picture/<uid>/admin"
+							},
+							"response": []
+						},
+						{
+							"name": "admin-change-password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"newPassword\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/shop-manager/v1/user/update/password/<uid>/admin"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "category",
+					"item": [
+						{
+							"name": "remove",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "http://localhost:3000/shop-manager/v1/category/remove/<id>"
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/shop-manager/v1/category/update/<id>"
+							},
+							"response": []
+						},
+						{
+							"name": "add",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/shop-manager/v1/category/add"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "product",
+					"item": [
+						{
+							"name": "update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "description",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "category",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "picture",
+											"value": "",
+											"type": "file",
+											"disabled": true
+										},
+										{
+											"key": "price",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stock",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": "http://localhost:3000/shop-manager/v1/product/update/<id>"
+							},
+							"response": []
+						},
+						{
+							"name": "add",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "category",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "picture",
+											"value": "",
+											"type": "file"
+										},
+										{
+											"key": "price",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "stock",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": "http://localhost:3000/shop-manager/v1/product/add"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "profilePicture",
+									"value": "",
+									"type": "file"
+								},
+								{
+									"key": "role",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": "http://localhost:3000/shop-manager/v1/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Commente `username` o `email` para iniciar sesión con uno de los dos.\r\n\r\n{\r\n    //\"username\": \"\",\r\n    //\"email\": \"\",\r\n    \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/shop-manager/v1/auth/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/shop-manager/v1/user/profile/<uid>"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// Commente la línea(s) de los datos que no quire cambiar.\r\n// Asegúrese de colocar su token en Authorization > Bearer.\r\n\r\n{\r\n    \"name\": \"\"\r\n    ,\"lastName\": \"\"\r\n    ,\"username\": \"\"\r\n    ,\"email\": \"\"\r\n    ,\"phone\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/shop-manager/v1/user/update"
+					},
+					"response": []
+				},
+				{
+					"name": "change-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newPassword\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3000/shop-manager/v1/user/update/password"
+					},
+					"response": []
+				},
+				{
+					"name": "change-pfp",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profilePicture",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": "http://localhost:3000/shop-manager/v1/user/update/picture/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/shop-manager/v1/category/list"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "list-and-search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/shop-manager/v1/product/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"shop-manager",
+								"v1",
+								"product",
+								"list"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "from",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/shop-manager/v1/product/<id>"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

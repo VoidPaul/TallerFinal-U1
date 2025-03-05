@@ -1,4 +1,11 @@
+# VScode custom configs
 .vscode/
+
+# Profile pictures except the default
+public/uploads/pictures/profile/*
+public/uploads/pictures/product/*
+!public/uploads/pictures/product/example-product.jpg
+!public/uploads/pictures/profile/default-pfp.png
 
 # Logs
 logs
@@ -75,7 +82,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env
+# .env
 .env.development.local
 .env.test.local
 .env.production.local

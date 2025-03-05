@@ -1,21 +1,23 @@
 {
-  "name": "enterprise-manager",
+  "name": "eshop-manager",
   "version": "1.0.0",
   "description": "Un simple administrador empresarial.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VoidPaul/TallerIII-U1.git"
+    "url": "git+https://github.com/VoidPaul/TallerFinal-U1.git"
   },
   "author": "Paulo Giovanni Alvarez Ramos - 2023238",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/VoidPaul/TallerIII-U1/issues"
+    "url": "https://github.com/VoidPaul/TallerFinal-U1/issues"
   },
-  "homepage": "https://github.com/VoidPaul/TallerIII-U1#readme",
+  "homepage": "https://github.com/VoidPaul/TallerFinal-U1#readme",
   "devDependencies": {
     "nodemon": "^3.1.9"
   },
@@ -29,7 +31,11 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "pdfkit": "^0.16.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "type": "module"
 }
