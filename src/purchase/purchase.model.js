@@ -14,7 +14,7 @@ const purchaseSchema = Schema(
         price: { type: String, required: true },
       },
     ],
-    total: { type: Number, required: true },
+    total: { type: String, required: true },
     date: { type: Date, default: Date.now },
     status: { type: String, enum: ["pending", "completed"], default: "completed" },
     filePath: { type: String },
