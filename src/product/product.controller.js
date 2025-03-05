@@ -10,33 +10,35 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export const addProduct = async (req, res) => {
   try {
     const data = req.body
-    const { category } = req.body
+    const { category: categoryName } = req.body
 
-    const productCategory = Category.findOne({ _id: category })
+    const validCategory = await Category.findOne({ name: categoryName })
 
-    if (!productCategory) {
+    if (!validCategory) {
       return res.status(404).json({
         success: false,
         message: "Category not found.",
       })
     }
 
-    let productPicture = req.file ? req.file.filename : null
+    const productCategory = validCategory._id
     const numericStock = Number(data.stock)
+    let productPicture = req.file ? req.file.filename : null
 
     data.picture = productPicture
+    data.category = productCategory
     data.creationDate = new Date()
     data.stock = numericStock
 
-    const product = new Product({ ...data, category })
+    const product = new Product(data)
 
     await product.save()
 
+    const populatedProduct = await Product.findById(product._id).populate("category", "name")
+
     return res.status(201).json({
-      message: "Product added successfuly.",
-      productName: product.name,
-      productCategory: product.category.name,
-      price: product.price,
+      message: "Product added successfully.",
+      product: populatedProduct,
     })
   } catch (err) {
     return res.status(500).json({
@@ -110,46 +112,57 @@ export const getProducts = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params
-    const { category } = req.body
+    const { category: categoryName } = req.body
     const data = req.body
 
-    const product = await Product.findById(id)
+    const oldProduct = await Product.findById(id)
 
-    const newCategory = await Category.findOne({ _id: category })
-
-    let newProductPic = req.file ? req.file.filename : null
-
-    if (!product) {
+    if (!oldProduct) {
       return res.status(404).json({
         success: false,
         message: "Product not found.",
       })
     }
 
-    if (!newProductPic) {
-      return res.status(404).json({
-        success: false,
-        message: "File not found.",
-      })
+    let categoryId = oldProduct.category
+
+    if (categoryName) {
+      const validCategory = await Category.findOne({ name: categoryName })
+      if (!validCategory) {
+        return res.status(404).json({
+          success: false,
+          message: "Category not found.",
+        })
+      }
+      categoryId = validCategory._id
     }
 
-    if (newProductPic && product.picture) {
-      const oldProductPic = join(__dirname, "../../public/uploads/pictures/product", product.picture)
+    let newProductPic = req.file ? req.file.filename : null
+
+    if (newProductPic && oldProduct.picture) {
+      const oldProductPic = join(
+        __dirname,
+        "../../public/uploads/pictures/product",
+        oldProduct.picture
+      )
       await fs.unlink(oldProductPic)
     }
 
     const updateData = {
+      ...oldProduct.toObject(),
       ...data,
-      picture: newProductPic || product.picture,
-      category: category || product.category,
+      picture: newProductPic || oldProduct.picture,
+      category: categoryId,
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true })
+    const newProduct = await Product.findByIdAndUpdate(id, updateData, { new: true })
+
+    const product = await Product.findById(newProduct._id).populate("category", "name")
 
     return res.status(200).json({
       success: true,
       message: "Product updated.",
-      product: updatedProduct,
+      product,
     })
   } catch (err) {
     return res.status(500).json({

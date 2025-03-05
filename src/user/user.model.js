@@ -41,6 +41,7 @@ const userSchema = Schema(
       type: String,
       enum: ["ADMIN", "CUSTOMER"],
       required: true,
+      default: "CUSTOMER",
     },
     status: {
       type: Boolean,

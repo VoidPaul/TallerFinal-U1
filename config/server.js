@@ -10,6 +10,7 @@ import userRoutes from "../src/user/user.routes.js"
 import productRoutes from "../src/product/product.routes.js"
 import categoryRoutes from "../src/category/category.routes.js"
 import apiLimiter from "../src/middleware/rate-limit.js"
+import { defaultAdmin, defaultCategory } from "../src/helpers/generate-defaults.js"
 import { swaggerDocs, swaggerUi } from "./swagger.js"
 
 const middlewares = (app) => {
@@ -49,6 +50,8 @@ const routes = (app) => {
 
 const connectDB = async () => {
   try {
+    defaultAdmin()
+    defaultCategory()
     await dbConnection()
   } catch (err) {
     console.log(`Server  | Database connection failed: ${err}`)
