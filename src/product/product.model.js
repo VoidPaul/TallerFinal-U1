@@ -5,11 +5,17 @@ const productSchema = Schema(
     name: {
       type: String,
       maxLength: 50,
+      unique: true,
       required: [true, "Product name required."],
     },
     description: {
       type: String,
       required: [true, "Product description required."],
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: "category",
+      required: [true, "Product category requried."],
     },
     picture: {
       type: String,
@@ -26,6 +32,7 @@ const productSchema = Schema(
     stock: {
       type: Number,
       required: [true, "Stock required."],
+      default: 0,
     },
     sold: {
       type: Number,
