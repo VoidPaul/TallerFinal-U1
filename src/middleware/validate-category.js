@@ -1,5 +1,5 @@
 import { body, param } from "express-validator"
-import { categoryExists, categoryNameExists } from "../helpers/database-validator.js"
+import { categoryExists, categoryNameExists } from "../helpers/validate-database.js"
 import { validateJWT, validateRoles } from "./validate-jwt.js"
 import { validateFields } from "./field-error-handler.js"
 import { handleErrors } from "./error-handler.js"

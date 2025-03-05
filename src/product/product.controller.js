@@ -1,4 +1,5 @@
 import Product from "./product.model.js"
+import Category from "../category/category.model.js"
 import fs from "fs/promises"
 import { join, dirname } from "path"
 import { fileURLToPath } from "url"
@@ -9,9 +10,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export const addProduct = async (req, res) => {
   try {
     const data = req.body
-    const category = req.body
+    const { category } = req.body
 
-    if (!category) {
+    const productCategory = Category.findOne({ _id: category })
+
+    if (!productCategory) {
       return res.status(404).json({
         success: false,
         message: "Category not found.",
@@ -19,16 +22,20 @@ export const addProduct = async (req, res) => {
     }
 
     let productPicture = req.file ? req.file.filename : null
+    const numericStock = Number(data.stock)
 
     data.picture = productPicture
+    data.creationDate = new Date()
+    data.stock = numericStock
 
-    const product = new Product({ ...data, category: category })
+    const product = new Product({ ...data, category })
 
     await product.save()
 
     return res.status(201).json({
       message: "Product added successfuly.",
       productName: product.name,
+      productCategory: product.category.name,
       price: product.price,
     })
   } catch (err) {
@@ -67,13 +74,23 @@ export const getProductById = async (req, res) => {
 }
 
 export const getProducts = async (req, res) => {
-  const { limit = 10, from = 0 } = req.query
+  const { limit = 10, from = 0, name } = req.query
   const isActive = { status: true }
 
   try {
+    let query = { ...isActive }
+
+    if (name) {
+      query.name = { $regex: new RegExp(name, "i") }
+    }
+
     const [total, products] = await Promise.all([
-      Product.countDocuments(),
-      Product.find(isActive).sort(getSortOptions(req)).skip(Number(from)).limit(Number(limit)),
+      Product.countDocuments(query),
+      Product.find(query)
+        .populate("category", "name")
+        .sort(getSortOptions(req))
+        .skip(Number(from))
+        .limit(Number(limit)),
     ])
 
     return res.status(200).json({
@@ -93,38 +110,46 @@ export const getProducts = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params
+    const { category } = req.body
     const data = req.body
-    const category = req.body
+
+    const product = await Product.findById(id)
+
+    const newCategory = await Category.findOne({ _id: category })
 
     let newProductPic = req.file ? req.file.filename : null
 
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found.",
+      })
+    }
+
     if (!newProductPic) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: "File not found.",
       })
     }
 
-    if (!category) {
-      return res.status(404).json({
-        success: false,
-        message: "Category not found.",
-      })
+    if (newProductPic && product.picture) {
+      const oldProductPic = join(__dirname, "../../public/uploads/pictures/product", product.picture)
+      await fs.unlink(oldProductPic)
     }
 
-    const oldProductPic = join(__dirname, "../../public/uploads/pictures/product", product.picture)
-    await fs.unlink(oldProductPic)
+    const updateData = {
+      ...data,
+      picture: newProductPic || product.picture,
+      category: category || product.category,
+    }
 
-    data.picture = newProductPic
-
-    const product = new Product({ ...data, category: category })
-
-    await product.findByIdAndUpdate(id)
+    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true })
 
     return res.status(200).json({
       success: true,
-      message: "User updated.",
-      product: product,
+      message: "Product updated.",
+      product: updatedProduct,
     })
   } catch (err) {
     return res.status(500).json({

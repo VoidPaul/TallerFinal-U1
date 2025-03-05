@@ -1,5 +1,5 @@
 import { body, param } from "express-validator"
-import { productExists } from "../helpers/validate-database.js"
+import { categoryExists, productExists, productNameExists } from "../helpers/validate-database.js"
 import { validateJWT, validateRoles } from "./validate-jwt.js"
 import { validateFields } from "./field-error-handler.js"
 import { deleteFileOnError } from "./file-error-handler.js"
@@ -9,10 +9,9 @@ export const addProductValidator = [
   validateJWT,
   validateRoles("ADMIN"),
   body("name", "Product name is required.").notEmpty(),
-  body("name").custom(productExists),
+  body("name").custom(productNameExists),
   body("description", "Product description is required.").notEmpty(),
-  body("category", "Product category is required.").notEmpty(),
-  body("picture", "Product picture is required.").notEmpty(),
+  body("category", "Valid product category is required.").isMongoId().notEmpty(),
   body("price", "Product price is required.").notEmpty(),
   body("stock", "Product stock is required.").notEmpty(),
   body("stock", "Stock must be a number.").isNumeric(),
@@ -32,12 +31,10 @@ export const updateProductValidator = [
   validateJWT,
   validateRoles("ADMIN"),
   param("id", "Invalid MongoDB ID.").isMongoId(),
-  param("id").custom(productExists),
+  param("id").custom(productNameExists),
   body("name", "Product name is required.").optional().notEmpty(),
-  body("name").optional().custom(productExists),
   body("description", "Product description is required.").optional().notEmpty(),
-  body("category", "Product category is required.").optional().notEmpty(),
-  body("picture", "Product picture is required.").optional().notEmpty(),
+  body("category", "Valid product category is required.").optional().isMongoId(),
   body("price", "Product price is required.").optional().notEmpty(),
   body("stock", "Product stock is required.").optional().notEmpty(),
   body("stock", "Stock must be a number.").optional().isNumeric(),

@@ -10,7 +10,7 @@ const router = Router()
 
 router.post("/add", newCategoryValidator, newCategory)
 
-router.get("/", getCategories)
+router.get("/list", getCategories)
 
 router.put("/update/:id", updateCategoryValidator, updateCategory)
 

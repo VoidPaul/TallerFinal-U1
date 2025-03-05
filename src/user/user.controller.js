@@ -111,6 +111,23 @@ const updateUserProfilePicture = async (uid, req, res) => {
   }
 }
 
+const disableUserStatus = async (uid, req, res) => {
+  try {
+    await User.findByIdAndUpdate(uid, { status: false })
+
+    return res.status(200).json({
+      success: true,
+      message: "User removed successfuly.",
+    })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Error removing user.",
+      error: err,
+    })
+  }
+}
+
 export const getUserById = async (req, res) => {
   try {
     const { uid } = req.params
@@ -150,6 +167,10 @@ export const updateProfilePicture = async (req, res) => {
   await updateUserProfilePicture(req.user._id, req, res)
 }
 
+export const removeUser = async (req, res) => {
+  await disableUserStatus(req.user._id, req, res)
+}
+
 export const adminUpdateUser = async (req, res) => {
   await updateUserData(req.params.uid, req.body, res)
 }
@@ -160,4 +181,8 @@ export const adminUpdatePassword = async (req, res) => {
 
 export const adminUpdateProfilePicture = async (req, res) => {
   await updateUserProfilePicture(req.params.uid, req, res)
+}
+
+export const adminRemoveUser = async (req, res) => {
+  await disableUserStatus(req.params.uid, req, res)
 }

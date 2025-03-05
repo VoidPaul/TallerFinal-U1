@@ -50,10 +50,11 @@ export const categoryExists = async (id = "") => {
   }
 }
 
-export const categoryNameExists = async (name = "") => {
+export const categoryNameExists = async (category = "") => {
+  const name = category
   const exists = await Category.findOne({ name })
 
   if (exists) {
-    throw new Error(`Category "${name}" already exists.`)
+    throw new Error(`Category "${category}" already exists.`)
   }
 }

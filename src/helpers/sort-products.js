@@ -1,15 +1,16 @@
-const allowedParams = ["price", "stock", "sold", "creationDate"]
+const allowedParams = ["name", "price", "stock", "sold", "creationDate"]
 
 export const getSortOptions = (req) => {
-  if (
-    !req.query.sort ||
-    !allowedParams.includes(req.query.sort) ||
-    !req.query.order ||
-    !["asc", "desc"].includes(req.query.order)
-  ) {
+  const { sort, order } = req.query
+
+  if (!sort || !allowedParams.includes(req.query.sort) || !order || !["asc", "desc"].includes(req.query.order)) {
     return { _id: 1 }
   }
-  const sortField = req.query.sort
+
+  if (sort === "category") {
+    return { "category.name": order === "desc" ? -1 : 1 }
+  }
+
   const sortOrder = req.query.order === "desc" ? -1 : 1
-  return { [sortField]: sortOrder }
+  return { [sort]: sortOrder }
 }

@@ -6,6 +6,7 @@ const CURRENT_DIR = dirname(fileURLToPath(import.meta.url))
 const MIMETYPES = ["image/png", "image/jpg", "image/jpeg"]
 const MAX_SIZE = 100000000
 const PFP_DIR = "../../public/uploads/pictures/profile"
+const PRD_DIR = "../../public/uploads/pictures/product"
 
 const createMulterConfig = (destinationFolder) => {
   return multer({
@@ -20,6 +21,8 @@ const createMulterConfig = (destinationFolder) => {
         const fileName = file.originalname.split(fileExtension)[0]
         destinationFolder == PFP_DIR
           ? cb(null, `user-profile-${Date.now()}${fileExtension}`)
+          : destinationFolder == PRD_DIR
+          ? cb(null, `product-image-${Date.now()}${fileExtension}`)
           : cb(null, `${fileName}-${Date.now()}${fileExtension}`)
       },
     }),
@@ -34,3 +37,4 @@ const createMulterConfig = (destinationFolder) => {
 }
 
 export const uploadProfilePicture = createMulterConfig(PFP_DIR)
+export const uploadProductPicture = createMulterConfig(PRD_DIR)

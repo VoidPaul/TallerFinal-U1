@@ -4,17 +4,17 @@ import {
   addProductValidator,
   getProductByIdValidator,
   updateProductValidator,
-  removeProduct,
   removeProductValidator,
-} from "../middleware/validate-product"
+} from "../middleware/validate-product.js"
+import { uploadProductPicture } from "../middleware/multer-uploads.js"
 
 const router = Router()
 
-router.post("/add", addProductValidator, addProduct)
+router.post("/add", uploadProductPicture.single("picture"), addProductValidator, addProduct)
 
 router.get("/list", getProducts)
 
-router.put("/edit/:id", updateProductValidator, updateProduct)
+router.put("/edit/:id", uploadProductPicture.single("picture"), updateProductValidator, updateProduct)
 
 router.post("/remove/:id", removeProductValidator, removeProduct)
 

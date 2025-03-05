@@ -1,6 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc"
 import swaggerUi from "swagger-ui-express"
-import { userSchema } from "./schemas.js"
+import { productSchema, userSchema } from "./schemas.js"
 
 const options = {
   swaggerDefinition: {
@@ -29,13 +29,11 @@ const options = {
       },
       schemas: {
         User: userSchema,
+        Product: productSchema,
       },
     },
   },
-  apis: [
-    "./src/auth/auth.routes.js",
-    "./src/user/user.routes.js",
-  ],
+  apis: ["./src/auth/auth.routes.js", "./src/user/user.routes.js"],
 }
 
 const swaggerDocs = swaggerJSDoc(options)
