@@ -10,10 +10,10 @@ import { handleErrors } from "./error-handler.js"
 export const registerValidator = [
   body("name", "Name required.").notEmpty(),
   body("username", "Username is required.").notEmpty(),
-  body("username", "Username already in use.").custom(usernameExists),
+  body("username").custom(usernameExists),
   body("email", "E-mail required.").notEmpty(),
   body("email", "Enter a valid e-mail.").isEmail(),
-  body("email", "E-mail already in use.").custom(emailExists),
+  body("email").custom(emailExists),
   body("password", "W E A K password.").isStrongPassword(),
   validateFields,
   deleteFileOnError,
@@ -39,8 +39,14 @@ export const getUserByIdValidator = [
 
 export const updateUserValidator = [
   validateJWT,
-  body("username", "Username already in use.").custom(usernameExists),
+  body("name", "Name required.").optional().notEmpty(),
+  body("username", "Username is required.").optional().notEmpty(),
+  body("username").optional().custom(usernameExists),
+  body("email", "E-mail required.").optional().notEmpty(),
+  body("email", "Enter a valid e-mail.").optional().isEmail(),
+  body("email").optional().custom(emailExists),
   validateFields,
+  deleteFileOnError,
   handleErrors,
 ]
 
@@ -58,14 +64,24 @@ export const updateProfilePictureValidator = [validateJWT, validateFields, delet
 export const adminUpdateUserValidator = [
   validateJWT,
   validateRoles("ADMIN"),
-  body("username", "Username already in use.").custom(usernameExists),
+  param("uid", "Invalid MongoDB ID.").isMongoId(),
+  param("uid").custom(userExists),
+  body("name", "Name required.").optional().notEmpty(),
+  body("username", "Username is required.").optional().notEmpty(),
+  body("username").optional().custom(usernameExists),
+  body("email", "E-mail required.").optional().notEmpty(),
+  body("email", "Enter a valid e-mail.").optional().isEmail(),
+  body("email").optional().custom(emailExists),
   validateFields,
+  deleteFileOnError,
   handleErrors,
 ]
 
 export const adminUpdatePasswordValidator = [
   validateJWT,
   validateRoles("ADMIN"),
+  param("uid", "Invalid MongoDB ID.").isMongoId(),
+  param("uid").custom(userExists),
   body("newPassword", "New password cannot be W E A K.").isStrongPassword(),
   validateFields,
   handleErrors,
@@ -74,6 +90,8 @@ export const adminUpdatePasswordValidator = [
 export const adminUpdateProfilePictureValidator = [
   validateJWT,
   validateRoles("ADMIN"),
+  param("uid", "Invalid MongoDB ID.").isMongoId(),
+  param("uid").custom(userExists),
   validateFields,
   deleteFileOnError,
   handleErrors,
