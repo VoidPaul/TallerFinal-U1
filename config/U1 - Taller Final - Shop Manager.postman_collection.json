@@ -486,6 +486,81 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "purchase",
+			"item": [
+				{
+					"name": "cart",
+					"item": [
+						{
+							"name": "add",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// La cantidad acepta un valor numérico.\r\n\r\n{\r\n    \"productId\": \"\",\r\n    \"quantity\": \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:3000/shop-manager/v1/cart/add"
+							},
+							"response": []
+						},
+						{
+							"name": "remove",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "http://localhost:3000/shop-manager/v1/cart/remove/<product-id>"
+							},
+							"response": []
+						},
+						{
+							"name": "checkout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "POST",
+								"header": [],
+								"url": "http://localhost:3000/shop-manager/v1/cart/checkout"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "receipt",
+					"item": []
+				},
+				{
+					"name": "history",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/shop-manager/v1/purchase/history"
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
