@@ -1,12 +1,12 @@
-import { Router } from "express";
-import { addToCart, removeFromCart, checkout } from "./cart.controller.js";
-import { initCart } from "../middleware/cart.js";
-import { validateJWT } from "../middleware/validate-jwt.js";
+import { Router } from "express"
+import { addToCart, removeFromCart, checkout } from "./cart.controller.js"
+import { initCart } from "../middleware/shopping-cart.js"
+import { validateJWT } from "../middleware/validate-jwt.js"
 
-const router = Router();
+const router = Router()
 
-router.post("/add", validateJWT, initCart, addToCart);
-router.delete("/remove/:productId", validateJWT, initCart, removeFromCart);
-router.post("/checkout", validateJWT, initCart, checkout);
+router.post("/add", validateJWT, initCart, addToCart)
+router.delete("/remove/:productId", validateJWT, initCart, removeFromCart)
+router.post("/checkout", validateJWT, initCart, checkout)
 
-export default router;
+export default router
